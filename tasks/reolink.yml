@@ -1,0 +1,44 @@
+---
+- name: Ensure group 'reolink' exists
+  ansible.builtin.group:
+    name: reolink
+    state: present
+
+- name: Add the user 'reolink' to group reolink
+  ansible.builtin.user:
+    name: reolink
+    comment: reolink user
+    group: reolink
+
+- name: give proper permissions to reolink home dir
+  shell:
+    cmd: chmod -R 755 /home/reolink
+
+- name: Clone a github repository
+  git:
+    repo: https://github.com/drio/restic-reolink.git
+    dest: /home/reolink/restic-reolink
+    clone: yes
+    update: yes
+    force: yes
+
+- name: give proper permissions to restic-reolink repo
+  shell: |
+    chmod 755 /home/reolink/restic-reolink
+    chown reolink:reolink /home/reolink/restic-reolink
+
+- name: Create the camera dirs in /home/reolink
+  shell: |
+    for d in {{ cameras }};do
+      mkdir -p /home/reolink/$d
+      chown reolink:reolink /home/reolink/$d
+      chmod 755 /home/reolink/$d
+    done
+
+- name: Install cron job to clean up videos on N days
+  ansible.builtin.cron:
+    name: "Clean up old video files from cameras"
+    minute: "0"
+    hour: "1"
+    job: "/home/reolink/restic-reolink/reolink-clean-local.sh"
+    user: reolink

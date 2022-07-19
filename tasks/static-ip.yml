@@ -1,0 +1,10 @@
+---
+- name: Copy the new dhcpcd.conf
+  become: true
+  copy:
+    src: files/dhcpcd.conf
+    dest: /etc/dhcpcd.conf
+    owner: root
+    group: netdev
+    mode: '0664'
+    backup: yes

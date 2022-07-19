@@ -1,0 +1,7 @@
+---
+# Location where configuration files will be stored.
+config_dir: '~'
+
+restic_version: '0.13.1'
+cameras: "basement driveway garden irongate"
+

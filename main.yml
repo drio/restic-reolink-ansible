@@ -1,0 +1,40 @@
+---
+- hosts: ironfist
+  become: true
+
+  pre_tasks:
+    - name: Load configuration (with defaults from example file).
+      ansible.builtin.include_vars: "{{ item }}"
+      loop:
+        - config.yml
+      tags:
+        - always
+
+    - name: Ensure apt cache is up to date.
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+      when:
+        - ansible_facts.os_family == "Debian"
+
+  # handlers:
+  #   - name: Include handlers.
+  #     ansible.builtin.import_tasks: tasks/handlers.yml
+
+  tasks:
+    - name: Ensure dependencies are installed (Debian)
+      ansible.builtin.apt:
+        name:
+          - git
+          - rsync
+          - curl
+          - vsftpd
+        state: present
+      when: ansible_facts.os_family == "Debian"
+
+    - name: Install Restic
+      ansible.builtin.import_tasks: tasks/restic.yml
+
+    - name: Prepare reolink user
+      ansible.builtin.import_tasks: tasks/reolink.yml
+

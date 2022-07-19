@@ -1,0 +1,18 @@
+---
+- name: Download restic
+  ansible.builtin.get_url:
+    url: https://github.com/restic/restic/releases/download/v{{ restic_version }}/restic_{{ restic_version }}_linux_arm64.bz2
+    dest: /tmp/restic_{{ restic_version }}_linux_arm64.bz2
+    mode: '0660'
+
+- name: Extract restic
+  shell:
+    cmd: bzip2 -d /tmp/restic_{{ restic_version }}_linux_arm64.bz2
+
+- name: move restic to /usr/bin
+  shell:
+    cmd: mv /tmp/restic_{{ restic_version }}_linux_arm64 /usr/bin/restic
+
+- name: give proper permissions to restic binary
+  shell:
+    cmd: chmod 755 /usr/bin/restic
