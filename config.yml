@@ -5,6 +5,8 @@ config_dir: '~'
 restic_version: '0.13.1'
 cameras: "basement driveway garden irongate"
 
+reolink_pass: 'foo_bar'
+
 cron_clean_hour: 4
 cron_clean_minute: 0
 
