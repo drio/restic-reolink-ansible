@@ -5,3 +5,17 @@ config_dir: '~'
 restic_version: '0.13.1'
 cameras: "basement driveway garden irongate"
 
+cron_clean_hour: 4
+cron_clean_minute: 0
+
+cron_backup_hour: 2
+cron_backup_minute: 0
+
+b2_bucket: 'bucket name'
+b2_id: 'xxx'
+b2_key: 'xx'
+b2_dir: 'dir'
+b2_pass: 'apass'
+
+keep_within: '1m' # 1 month
+remove_after_days: 4

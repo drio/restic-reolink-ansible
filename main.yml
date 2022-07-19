@@ -1,12 +1,13 @@
+#!/usr/bin/env ansible-playbook
 ---
-- hosts: ironfist
+- hosts: ift
   become: true
 
   pre_tasks:
     - name: Load configuration (with defaults from example file).
       ansible.builtin.include_vars: "{{ item }}"
       loop:
-        - config.yml
+        - config.drio.yml
       tags:
         - always
 
@@ -20,6 +21,11 @@
   # handlers:
   #   - name: Include handlers.
   #     ansible.builtin.import_tasks: tasks/handlers.yml
+
+  # roles:
+  #   - role: artis3n.tailscale
+  #     vars:
+  #       tailscale_up_skip: true
 
   tasks:
     - name: Ensure dependencies are installed (Debian)
@@ -38,3 +44,6 @@
     - name: Prepare reolink user
       ansible.builtin.import_tasks: tasks/reolink.yml
 
+    - name: Prepare the execution of the daily backups
+      ansible.builtin.import_tasks: tasks/backup.yml
+      tags: [ "backup" ]

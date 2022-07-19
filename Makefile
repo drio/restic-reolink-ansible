@@ -6,6 +6,7 @@ play:
 	ansible-playbook ${INVENTORY} main.yml
 
 requirements:
+	ansible-galaxy install artis3n.tailscale
 	ansible-galaxy collection install -r requirements.yml
 
 full-rebuild: tag/dockerstop tag/dockerprune bootstrap

@@ -38,7 +38,13 @@
 - name: Install cron job to clean up videos on N days
   ansible.builtin.cron:
     name: "Clean up old video files from cameras"
-    minute: "0"
-    hour: "1"
-    job: "/home/reolink/restic-reolink/reolink-clean-local.sh"
+    minute: "{{ cron_clean_minute }}"
+    hour: "{{ cron_clean_hour }}"
+    job: "/home/reolink/restic-reolink/reolink-clean-local.sh {{ remove_after_days }}"
     user: reolink
+
+- name: Make sure we can execute the reolink-clean-local.sh script
+  ansible.builtin.file:
+    path: "/home/reolink/restic-reolink/reolink-clean-local.sh"
+    state: touch
+    mode: u=rwx,g=rx,o=rx
