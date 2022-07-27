@@ -22,3 +22,5 @@ b2_pass: ''
 
 keep_within: '1m' # 1 month
 remove_after_days: 4
+
+node_exporter_dir: '/var/lib/node-exporter'

@@ -2,7 +2,7 @@
 - name: Clone a github repository
   git:
     repo: https://github.com/drio/restic-reolink.git
-    dest: /home/drio/restic-reolink
+    dest: /home/pi/restic-reolink
     clone: yes
     update: yes
     force: yes
@@ -10,7 +10,7 @@
 - name: Copy env
   ansible.builtin.template:
     src: templates/{{ item.src }}
-    dest: "/home/drio/restic-reolink/{{ item.dest }}"
+    dest: "/home/pi/restic-reolink/{{ item.dest }}"
     mode: 0644
   loop:
     - src: env.j2
@@ -18,7 +18,7 @@
 
 - name: Create pass file
   shell: |
-    echo "{{ b2_pass }}" > "/home/drio/restic-reolink/pass.txt"
+    echo "{{ b2_pass }}" > "/home/pi/restic-reolink/pass.txt"
 
 - name: Install cron job to run the backups
   ansible.builtin.cron:
@@ -26,14 +26,14 @@
     minute: "{{ cron_backup_minute }}"
     hour: "{{ cron_backup_hour }}"
     job: "/home/reolink/restic-reolink/reolink-run-backup.sh"
-    user: drio
+    user: pi
 
 - name: give proper permissions to restic-reolink repo
   shell: |
-    chmod -R 755 /home/drio/restic-reolink
-    chown -R drio:drio /home/drio/restic-reolink
+    chmod -R 755 /home/pi/restic-reolink
+    chown -R pi:pi /home/pi/restic-reolink
 
 - name: give proper permissions to restic-reolink repo
   shell: |
-    chmod -R 755 /home/drio/restic-reolink
-    chown -R drio:drio /home/drio/restic-reolink
+    chmod -R 755 /home/pi/restic-reolink
+    chown -R pi:pi /home/pi/restic-reolink

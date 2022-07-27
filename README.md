@@ -12,7 +12,7 @@ The playbook takes care of:
     * install script to remove files after x days
     * create subdirectories for the different cameras
     * install cronjob to clean up
-* for the drio user:
+* for the pi user:
     * init b2 bucket (maybe run once) — ONLY ONCE (dedicated tag)
     * copy reolink backups repo repo
     * install cron to run backup
@@ -20,3 +20,4 @@ The playbook takes care of:
 TODO/NOTE: Make sure you: 
   - initialize the restic repo before you start doing the backups.
   - setup your cameras do dump videos via ftp on events.
+  - make the user dynamic using (pi - drio)
