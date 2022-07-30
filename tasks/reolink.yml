@@ -1,51 +1,22 @@
 ---
-- name: Ensure group 'reolink' exists
-  ansible.builtin.group:
-    name: reolink
-    state: present
-
-- name: Add the user 'reolink' to group reolink
-  ansible.builtin.user:
-    name: reolink
-    password: "{{ reolink_pass | password_hash('sha512') }}"
-    comment: reolink user
-    group: reolink
-
-- name: give proper permissions to reolink home dir
-  shell:
-    cmd: chmod -R 755 /home/reolink
-
-- name: Clone a github repository
-  git:
-    repo: https://github.com/drio/restic-reolink.git
-    dest: /home/reolink/restic-reolink
-    clone: yes
-    update: yes
-    force: yes
-
-- name: give proper permissions to restic-reolink repo
-  shell: |
-    chmod 755 /home/reolink/restic-reolink
-    chown reolink:reolink /home/reolink/restic-reolink
-
 - name: Create the camera dirs in /home/reolink
   shell: |
     for d in {{ cameras }};do
-      mkdir -p /home/reolink/$d
-      chown reolink:reolink /home/reolink/$d
-      chmod 755 /home/reolink/$d
+      mkdir -p /home/pi/cameras/$d
+      chmod 755 /home/pi/cameras/$d
     done
+  tags: [ "always" ]
+  become: false
 
 - name: Install cron job to clean up videos on N days
-  ansible.builtin.cron:
+  cron:
     name: "Clean up old video files from cameras"
     minute: "{{ cron_clean_minute }}"
     hour: "{{ cron_clean_hour }}"
-    job: "/home/reolink/restic-reolink/reolink-clean-local.sh {{ remove_after_days }}"
-    user: reolink
+    job: "/home/pi/restic-reolink/reolink-clean-local.sh {{ remove_after_days }}"
 
 - name: Make sure we can execute the reolink-clean-local.sh script
-  ansible.builtin.file:
-    path: "/home/reolink/restic-reolink/reolink-clean-local.sh"
+  file:
+    path: "/home/pi/restic-reolink/reolink-clean-local.sh"
     state: touch
-    mode: u=rwx,g=rx,o=rx
+    mode: u=rwx

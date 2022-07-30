@@ -1,0 +1,17 @@
+# docker-compose.yml
+
+version: '3.3'
+services:
+  ftpserver:
+    container_name: 'ftpserver'
+    ports:
+      - '2121-2130:2121-2130'
+    volumes:
+      - /home/pi/cameras:/tmp
+      - .:/app
+    image: fclairamb/ftpserver
+    entrypoint: 
+      - "/bin/ftpserver"
+      - "-conf" 
+      - "./ftpserver.json"
+    restart: always

@@ -1,0 +1,33 @@
+---
+- name: Gather package facts.
+  ansible.builtin.package_facts:
+    manager: auto
+  when: ansible_facts.userspace_bits == '32'
+  tags: [ "always" ]
+
+- name: Synchronize dc directory.
+  ansible.posix.synchronize:
+    src: "{{ dc_dir }}"
+    dest: "{{ config_dir }}/"
+    delete: false
+    recursive: true
+    perms: false
+  become: false
+
+- name: Start the different services in docker-obs (rebuild if necessary)
+  community.docker.docker_compose:
+    project_src: "{{ config_dir }}/{{ dc_dir }}/"
+    build: true
+  become: false
+
+- name: Copy ftp config
+  ansible.builtin.template:
+    src: templates/{{ item.src }}
+    dest: "{{ config_dir }}/{{ dc_dir }}/{{ item.dest}}"
+    mode: 0644
+  loop:
+    - src: ftpserver.json.j2
+      dest: ftpserver.json
+  become: false
+
+
