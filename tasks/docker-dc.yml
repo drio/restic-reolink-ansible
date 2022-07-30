@@ -14,12 +14,6 @@
     perms: false
   become: false
 
-- name: Start the different services in docker-obs (rebuild if necessary)
-  community.docker.docker_compose:
-    project_src: "{{ config_dir }}/{{ dc_dir }}/"
-    build: true
-  become: false
-
 - name: Copy ftp config
   ansible.builtin.template:
     src: templates/{{ item.src }}
@@ -29,5 +23,12 @@
     - src: ftpserver.json.j2
       dest: ftpserver.json
   become: false
+
+- name: Start the different services in docker-obs (rebuild if necessary)
+  community.docker.docker_compose:
+    project_src: "{{ config_dir }}/{{ dc_dir }}/"
+    build: true
+  become: false
+
 
 

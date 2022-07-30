@@ -25,7 +25,7 @@
     name: "Run reolink backup"
     minute: "{{ cron_backup_minute }}"
     hour: "{{ cron_backup_hour }}"
-    job: "/home/reolink/restic-reolink/reolink-run-backup.sh"
+    job: "/home/reolink/restic-reolink/run-backup.sh"
     user: pi
 
 - name: give proper permissions to restic-reolink repo

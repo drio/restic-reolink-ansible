@@ -1,7 +1,7 @@
 #!/usr/bin/env ansible-playbook
 ---
 - hosts: pi4
-  become: true
+  become: false
 
   pre_tasks:
     - name: Load configuration (with defaults from example file).
@@ -37,28 +37,31 @@
         state: present
       when: ansible_facts.os_family == "Debian"
 
-
     - name: Setup the cameras dir
       import_tasks: tasks/reolink.yml
 
     - name: Install Restic
+      become: true
       import_tasks: tasks/restic.yml
 
     - name: Machine tasks
+      become: true
       import_tasks: tasks/machine.yml
 
     - name: Prepare the execution of the daily backups
       import_tasks: tasks/backup.yml
       tags: [ "backup" ]
 
-    - name: Install docker
-      ansible.builtin.import_tasks: tasks/docker.yml
-
-    - name: Prepare docker compose (dc) in host machine
-      ansible.builtin.import_tasks: tasks/docker-dc.yml
-
-    - name: Stop service httpd, if started
+    - name: Stop service vftpd, if started
+      become: yes
       service:
         name: vsftpd
         state: stopped
       tags: [ "always" ]
+
+    - name: Install docker
+      ansible.builtin.import_tasks: tasks/docker.yml
+      become: yes
+
+    - name: Prepare docker compose (dc) in host machine
+      ansible.builtin.import_tasks: tasks/docker-dc.yml

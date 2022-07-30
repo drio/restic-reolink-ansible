@@ -10,9 +10,11 @@
     cmd: bzip2 -d /tmp/restic_{{ restic_version }}_linux_arm64.bz2
 
 - name: move restic to /usr/bin
+  become: yes
   shell:
     cmd: mv /tmp/restic_{{ restic_version }}_linux_arm64 /usr/bin/restic
 
 - name: give proper permissions to restic binary
+  become: yes
   shell:
     cmd: chmod 755 /usr/bin/restic
