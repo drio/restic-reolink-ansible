@@ -21,11 +21,11 @@
     echo "{{ b2_pass }}" > "/home/pi/restic-reolink/pass.txt"
 
 - name: Install cron job to run the backups
-  ansible.builtin.cron:
+  cron:
     name: "Run reolink backup"
     minute: "{{ cron_backup_minute }}"
     hour: "{{ cron_backup_hour }}"
-    job: "/home/reolink/restic-reolink/run-backup.sh"
+    job: "cd /home/pi/restic-reolink && ./run_backup.sh"
     user: pi
 
 - name: give proper permissions to restic-reolink repo
